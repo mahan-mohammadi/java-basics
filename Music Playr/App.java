@@ -12,18 +12,20 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 public class App {
     public static void main(String[] args) throws Exception {
 
-        String filePath = "C:\\Users\\ThinkPad P50\\Desktop\\javavs\\music\\black_country_new_road_-_concorde.wav";
+        String filePath = "file path"; // enter your file path here instead
         int response =0;
 
         File file = new File(filePath);
         Scanner sc = new Scanner(System.in);
 
         try(AudioInputStream stream = AudioSystem.getAudioInputStream(file)){
+
             Clip clip = AudioSystem.getClip();
             clip.open(stream);
+
             boolean running = true;
             while (running) {
-                System.out.println("\nEnter a command:");
+                System.out.println("Enter a command:");
                 System.out.println("1: Start");
                 System.out.println("2: Stop");
                 System.out.println("3: Reset");
@@ -35,6 +37,9 @@ public class App {
                         if (!clip.isRunning()) {
                             //clip.setMicrosecondPosition(0);  //Optional: reset before starting
                             clip.start();
+                            Thread thread = new Thread(new MyRunnable(clip));
+                            thread.setDaemon(true);
+                            thread.start();
                             System.out.println("Playback started.");
                         } else {
                             System.out.println("Audio is already playing.");
